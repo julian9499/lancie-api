@@ -36,6 +36,7 @@ repositories {
     maven {
         url "https://github.com/stil4m/maven-repository/raw/master/releases/"
     }
+    maven { url "https://jitpack.io" }
 }
 
 
@@ -63,6 +64,7 @@ dependencies {
     compile("org.projectlombok:lombok:1.16.18")
     compile("com.google.guava:guava:23.0")
     compile("nl.stil4m:mollie-api:2.6.2")
+    compile("com.github.AreaFiftyLAN:toornament-client:master-SNAPSHOT")
 
     runtime("org.hsqldb:hsqldb")
     runtime("org.postgresql:postgresql")
