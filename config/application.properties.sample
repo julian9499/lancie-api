@@ -5,3 +5,6 @@ spring.datasource.username=
 spring.datasource.password=
 a5l.molliekey=[CHANGE ME]
 a5l.googleMapsAPIkey=[CHANGE ME]
+a5l.extra.toornament.key=
+a5l.extra.toornament.id=
+a5l.extra.toornament.secret=

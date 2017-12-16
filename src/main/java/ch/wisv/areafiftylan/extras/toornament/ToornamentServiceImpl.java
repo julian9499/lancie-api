@@ -5,7 +5,6 @@ import ch.wisv.toornament.model.Tournament;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -23,11 +22,6 @@ public class ToornamentServiceImpl implements TournamentService {
     @Override
     public List<Tournament> getRemoteTournaments() {
         client = new ToornamentClient(apikey, clientId, clientSecret);
-        try {
-            return client.tournaments().getMyTournaments();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        throw new RuntimeException("Can't get you your tournaments");
+        return client.tournaments().getMyTournaments();
     }
 }
