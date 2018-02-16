@@ -92,6 +92,7 @@ public class SeatRestController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{group}/{number}")
     MappingJacksonValue getSeatByGroupAndNumber(@PathVariable String group, @PathVariable int number, @RequestParam(value = "admin", required = false) boolean admin, @AuthenticationPrincipal User user) {
+        this.websocketTemplate.convertAndSend("/topic/seats", new SeatUpdate(group, number, SeatUpdate.SeatUpdateStatus.RESERVED));
         MappingJacksonValue result = new MappingJacksonValue(seatService.getSeatBySeatGroupAndSeatNumber(group, number));
         if (!admin || !user.getAuthorities().contains(Role.ROLE_ADMIN)) {
             result.setSerializationView(View.Public.class);
