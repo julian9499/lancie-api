@@ -54,8 +54,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-devtools")
     compile("org.springframework.boot:spring-boot-starter-logging")
     compile("org.springframework.boot:spring-boot-starter-actuator")
-    compile("org.springframework:spring-messaging:4.0.0.RELEASE")
-    compile("org.springframework:spring-websocket:4.0.0.RELEASE")
+    compile("org.springframework:spring-messaging")
+    compile("org.springframework:spring-websocket")
 
 
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
