@@ -18,6 +18,7 @@
 package ch.wisv.areafiftylan.seats.controller;
 
 import ch.wisv.areafiftylan.seats.model.SeatGroupDTO;
+import ch.wisv.areafiftylan.seats.model.SeatUpdate;
 import ch.wisv.areafiftylan.seats.service.SeatService;
 import ch.wisv.areafiftylan.users.model.Role;
 import ch.wisv.areafiftylan.users.model.User;
@@ -25,6 +26,7 @@ import ch.wisv.areafiftylan.utils.view.View;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -37,9 +39,11 @@ import static ch.wisv.areafiftylan.utils.ResponseEntityBuilder.createResponseEnt
 public class SeatRestController {
 
     private final SeatService seatService;
+    private final SimpMessagingTemplate websocketTemplate;
 
-    public SeatRestController(SeatService seatService) {
+    public SeatRestController(SeatService seatService, SimpMessagingTemplate webSocketTemplate) {
         this.seatService = seatService;
+        this.websocketTemplate = webSocketTemplate;
     }
 
     /**
@@ -109,7 +113,9 @@ public class SeatRestController {
     @PostMapping("/{group}/{number}/{ticketId}")
     ResponseEntity<?> reserveSingleSeat(@PathVariable String group, @PathVariable Integer number,
                                         @PathVariable Long ticketId, @AuthenticationPrincipal User user) {
+        this.websocketTemplate.convertAndSend("/topic/seats", new SeatUpdate(group, number, SeatUpdate.SeatUpdateStatus.RESERVED));
         if (seatService.reserveSeat(group, number, ticketId, user.getAuthorities().contains(Role.ROLE_ADMIN))) {
+            this.websocketTemplate.convertAndSend("/topic/seats", new SeatUpdate(group, number, SeatUpdate.SeatUpdateStatus.RESERVED));
             return createResponseEntity(HttpStatus.OK, "Seat successfully reserved");
         } else {
             return createResponseEntity(HttpStatus.CONFLICT, "Seat is already taken");
